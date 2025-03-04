@@ -69,25 +69,25 @@ def main():
                         display_message("Новый контакт не создан. Неверно введены данные\n")
             elif choice in (5, 6, 7):
                 search_word = input("Введите слово для поиска/изменения/удаления контакта: ")
-                found = False
-                for index, contact in enumerate(directory.contacts):
-                    if search_word in (contact.name, contact.phone, contact.comment):
-                        found = True
-                        if choice == 5:
-                            display_message(f"Найден контакт: {contact}")
-                        elif choice == 6:
-                            display_message(f"Изменить контакт: {contact}")
-                            parts = get_contact_input("Введите новый контакт (Name Phone Comment): ")
-                            if parts:
-                                try:
-                                    directory.contacts[index] = Contact(*parts)
-                                    display_message("Контакт изменен\n")
-                                except Exception:
-                                    display_message("Не удалось изменить контакт")
-                        elif choice == 7:
-                            directory.remove_contact(contact)
-                            display_message(f"Удален контакт: {contact}\n")
-                if not found:
+                search_res = directory.search_contact(search_word)
+                if search_res:
+                    index, found_contact = search_res
+                    if choice == 5:
+                        display_message(f"Найден контакт: {found_contact}")
+                    elif choice == 6:
+                        display_message(f"Изменить контакт: {found_contact}")
+                        parts = get_contact_input("Введите новый контакт (Name Phone Comment): ")
+                        if parts:
+                            try:
+                                new_contact = Contact(*parts)
+                                directory.change_contact(index, new_contact)
+                                display_message("Контакт изменен\n")
+                            except Exception:
+                                display_message("Не удалось изменить контакт")
+                    elif choice == 7:
+                        directory.remove_contact(found_contact)
+                        display_message(f"Удален контакт: {found_contact}\n")
+                else:
                     display_message("Контакт не найден\n")
         else:
             display_message("Перед работой с файлом следует его открыть\n")

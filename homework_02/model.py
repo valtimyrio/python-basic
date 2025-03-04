@@ -40,6 +40,15 @@ class Directory:
     def add_contact(self, contact: Contact) -> None:
         self.contacts.append(contact)
 
+    def search_contact(self, search_word: str):
+        for index, contact in enumerate(self.contacts):
+            if search_word in (contact.name, contact.phone, contact.comment):
+                return (index, contact)
+        return None
+
+    def change_contact(self, index: int, contact: Contact) -> None:
+        self.contacts[index] = contact
+
     def remove_contact(self, contact: Contact) -> None:
         if contact in self.contacts:
             self.contacts.remove(contact)
